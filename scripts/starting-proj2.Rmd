@@ -1,0 +1,43 @@
+---
+title: "Project 2"
+author: "Sammi and Austin"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(Stat2Data)
+
+data(ICU)
+```
+
+
+```{r cleaning the data}
+myICU <- ICU %>%
+  mutate(Survive = as.factor(ifelse(Survive == 1, 'Discharged', 'Died'))) %>%
+  mutate(Sex = as.factor(ifelse(Sex == 1, 'Female', 'Male'))) %>%
+  mutate(Infection = as.factor(ifelse(Infection == 1, 'Infection suspected', 'No infection'))) %>%
+  mutate(Emergency = as.factor(ifelse(Emergency == 1, 'Emergency admission', 'Elective admission'))) %>%
+  mutate(AgeGroup = as.factor(ifelse(AgeGroup == 1, "Young", ifelse(AgeGroup == 2, "Middle", ifelse(AgeGroup == 3, "Old", "dne")))))
+# 
+# dead.df <- myICU %>%
+#   filter(Survive == 'Died')
+# 
+# alive.df <- myICU %>%
+#   filter(Survive == 'Discharged')
+```
+
+
+```{r exploring the data}
+#what infection are we studying/trends w/in inf. 
+library(ggplot2)
+
+ggplot(myICU, aes(x = Infection, y = Survive, colour = AgeGroup)) +
+  facet_grid(~Emergency) +
+  geom_jitter() +
+  labs(title = "Infectious Disease Survival by Age Group in Elective and Emergency Admissions")
+```
+
