@@ -16,7 +16,7 @@ data(ICU)
 
 
 ```{r cleaning the data}
-myICU <- ICU %>%
+ICU <- ICU %>%
   mutate(Survive = as.factor(ifelse(Survive == 1, 'Discharged', 'Died'))) %>%
   mutate(Sex = as.factor(ifelse(Sex == 1, 'Female', 'Male'))) %>%
   mutate(Infection = as.factor(ifelse(Infection == 1, 'Infection suspected', 'No infection'))) %>%
@@ -33,11 +33,67 @@ myICU <- ICU %>%
 
 ```{r exploring the data}
 #what infection are we studying/trends w/in inf. 
-library(ggplot2)
+#library(ggplot2)
 
-ggplot(myICU, aes(x = Infection, y = Survive, colour = AgeGroup)) +
+#demonstrates the clusters of infection to death with an indicator of how urgent the emergency was. 
+ggplot(ICU, aes(x = Infection, y = Survive, colour = AgeGroup)) +
   facet_grid(~Emergency) +
   geom_jitter() +
   labs(title = "Infectious Disease Survival by Age Group in Elective and Emergency Admissions")
+
+ggplot(ICU, aes(y = Pulse, x= SysBP, colour = Infection))+
+  facet_grid(~Survive)+
+  labs(title = "BP and Pulse of those who did vs not die and whether or not observation infected") +
+  geom_jitter()
+
+
+ggplot(ICU, aes(x = SysBP, y = Survive))+
+  facet_grid(~Infection) +
+  geom_jitter()
+
+ggplot(ICU, aes(x = Pulse, y = Survive))+
+  facet_grid(~Infection) +
+  geom_jitter()
+
+ggplot(ICU, aes(x = Pulse, y = SysBP, colour = Survive, size = Infection, alpha = 0.5))+
+  facet_grid(~AgeGroup) +
+  geom_jitter()+
+  labs(title = "Systolic Blood Pressure vs Pulse for Infection Contraction and Survival")
+help("ICU")
 ```
 
+"This dataset contains information for a sample of 200 patients who were part of a larger study [...]  a key variable to study is patient survival, which is coded in the Survive variable as 1 if the patient lived to be discharged and 0 if the patient died."
+
+The sample represents which populations survived vs died in the ICU in a given study. 
+
+
+## Project 2 Checkpoint Due 8:00pm 11/25
+Part 1: Project Checkpoint — 5 points | Due Wednesday, November 25 by 8:00 pm
+
+### 1. [1 pt] Give the first and last name of each group member and identify the dataset you selected.
+
+*Group:* Sammi Bergman and Austin Watson
+
+*Dataset:* "ICU" in Stats2Data
+
+### 2. [1 pt] State a specific research question that can reasonably be investigated using your dataset.
+
+*Working Question:* For a given infection, is there a specific demographic in which this disease poses greater risks of fatality?
+
+
+### 3. [1 pt] Briefly describe the sample represented by your dataset, including the observational units, sample size, and the
+population or group from which the data were obtained.
+
+This sample observes 200 patients admitted to the ICU, taken from a larger hospital study. The set records 9 observational units, including the patient's ID, survival, age, general age group, sex, systolic blood pressure, pulse, and suspicion of infection for an unnamed disease. 
+
+
+### 4. [1 pt] Identify and describe your response and explanatory variables, including whether each is quantitative or
+categorical and their units (where applicable).
+
+*Response variable:* Survival, a binary categorical outcome where a pateint either lives or does not. 
+
+*Explanatory Variables:* The predictor variable is a binary categorical variable of having an infection vs not. In the project, we hope to identify if age or sex has an influence of these variables. 
+
+### 5. [1 pt] Identify whether you will use logistic regression or two way ANOVA
+
+To determine how age and sex influences the survival of an illness, we will use ANOVA to assess the influence of categories by variance.
